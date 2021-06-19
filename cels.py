@@ -18,6 +18,6 @@ def read_db():
     index =0 
     for (colname,colval) in file.iteritems(): #colval.values = column values
         #resize(colval.values)    
-        continue
+        print(list(colval.values))
 
-#read_db()
+read_db()
