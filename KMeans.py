@@ -66,6 +66,8 @@ def RepeatedColor(nodeTemp,clusters):
     return False
 
 
+
+
 def KMeans(points):
     #Get clase names
     file = open("clase.csv")
@@ -87,14 +89,8 @@ def KMeans(points):
     size = len(nodes)
     K = 7
     for i in range(K):
-        nodeTemp = nodes[random.randint(0,size)].point
-        while(RepeatedColor(nodeTemp,clusters)):
-            nodeTemp = nodes[random.randint(0,size)].point        
+        nodeTemp = nodes[random.randint(0,size)].point        
         clusters.append(Cluster(nodeTemp))
-        #clusters.append(Cluster(nodes[random.randint(size*i//K,size*(i+1)//K)].point))
-    for i in clusters:
-        print(i.point)
-    while_loop(nodes,clusters,1)
     for i in clusters:
         print(i.point)
     while_loop(nodes,clusters,15)
@@ -103,7 +99,7 @@ def KMeans(points):
     for cluster in clusters:
         list_clust = []
         for node in cluster.items:
-            returning_points.append((int(node.point[0]//2.5),int(node.point[1]//2.5)))
+            returning_points.append(node.point)
             
   
     #im.show()

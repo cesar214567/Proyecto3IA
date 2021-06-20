@@ -6,10 +6,7 @@ from scipy import misc
 import numpy as np
 import pandas
 
-#from sklearn.decomposition import PCA
-#from sklearn.decomposition import IncrementalPCA
-#from sklearn.decomposition import KernelPCA
-#from sklearn.decomposition import SparsePCA
+
 from numpy import mean
 from numpy import std
 from sklearn.decomposition import TruncatedSVD
@@ -42,6 +39,7 @@ def reduce_db(X,num):
 
 
     
-lst = read_db()
+#lst = read_db()
 #print(len(lst))
-reduce_db(lst,30)
+#reduce_db(lst,30)
+#KMeans()

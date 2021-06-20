@@ -19,7 +19,8 @@ def dist(a, b):
     return math.dist(a,b)
     
 class Node:
-    def __init__(self,tupla):
+    def __init__(self,tupla,name):
+        self.name = name
         self.point = tupla
         self.cluster = -1
         self.dimensions = len(self.point)
@@ -88,8 +89,10 @@ def DBSCAN(points):
 
 
     print(len(points))
+    i = 0
     for point in points: 
-        nodes.append(Node(point))
+        nodes.append(Node(point,lista[i]))
+        i+=1 
     print("Info", len(points), len(points[0]), points[0])
     tree=[]
     tree =spatial.KDTree(points)
@@ -111,14 +114,18 @@ def DBSCAN(points):
             #else:
                 #print(new_cluster.items2)
     #print("asdas: ")
-    
+    Trues = 0
+    Falses = 0
     for temp in clusters:     
         x=[]
         y=[]
         for item in temp.items2:
             x.append(item.point[0])
             y.append(item.point[1])
-
+            if temp.name== item.name:
+                Trues += 1
+            else:
+                Falses += 1 
         print(temp.name[:-1])
         plt.plot(x,y,'*',label=temp.name[:-1])
         print("Cluster: %s, number %d" % (temp.name[:-1], len(temp.items2)))
@@ -131,7 +138,8 @@ def DBSCAN(points):
 
     for c in new_lista:
         print("%s tiene %d"% (c,lista.count(c)))
-
+    
+    print("Trues: %d, Falses %d"% (Trues,Falses))
 
 lst = read_db()
 new= reduce_db(lst,20)
