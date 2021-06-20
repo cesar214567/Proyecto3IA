@@ -1,11 +1,7 @@
 import numpy as np
-import math
 from random import random, randrange
 from scipy.spatial import distance
 import matplotlib.pyplot as plt
-import csv 
-
-
 
 
 def dist(a, b):
@@ -17,102 +13,90 @@ class Node:
         self.cluster = -1
         self.dimensions = len(self.point)
 
-    def getItems(self,r):
-        global tree
-        temp = []
-        data = tree.query_ball_point(self.point,r)
-        # print(data)
-        for item in data:
-            # print(nodes[item].point)
-            temp.append(nodes[item])
-        return temp
+    def print(self, numero):
+        print("Node: ", numero, " - ", self.point)
+
 
 class Cluster:
     def __init__(self,x):
         self.number = x
         self.visited = False
         self.items = []
-        self.items2 = []
         self.itemCount = 0
+        self.point = []
 
-    def build_cluster(self,node):
-        global tree
-        self.items.append(node)
-        self.itemCount += 1
-        node.cluster = self.number
-        while (len(self.items)!=0):
-            node_temp = self.items[0]
-            self.items.pop(0)
-            self.items2.append(node_temp)
-            #print(node_temp.point)
-            neighbours = node_temp.getItems(self.r)
-            for neigh in neighbours:
-                if neigh.cluster == -1:
-                    # print("HERE - ", neigh.point)
-                    self.items.append(neigh)
-                    self.itemCount+=1
-                    neigh.cluster=self.number
-        
-    def isValid(self):
-        return self.itemCount >= 25
+    def build_cluster(self,clusters):
+        temp = np.zeros(len(clusters[0].point))       
+        for cluster in clusters:
+            self.items.append(cluster)
+            if(type(cluster)=='Cluster'):
+                self.itemCount+=cluster.itemCount
+            else:
+                self.itemCount = 1
+            temp += cluster.point
+        self.point = temp
+    
+    def print(self, numero):
+        temp = numero + " - " + str(self.number)
+        print("cluster: ", temp)
+        for i in self.items:
+            i.print(temp)
+    
+    def print2(self):
+        self.items[0].print()
+        print(self.number)
+        if(len(self.items) > 1):
+            self.items[1].print()
 
-    def define(self, node):
-        self.build_cluster(node)
-        if(not self.isValid()):
-            for i in range(len(self.items2)):
-                self.items2[i].cluster = -1
-            self.itemCount=0 
-            self.items2 = []
-            return False
-        return True
-
-def algorithm():
+def algorithm(matrix):
     nodes = []
     clusters = []
-    for i in range(10):
-        sub_data =[]
-        for i in range(3):
-            sub_data.append(random.uniform(0,10))
-        node = Node(sub_data)
+    index = 0
+    for row in matrix:
+        node = Node(row)
         nodes.append(node)
-        clusters.append(Cluster(node)) 
-    
+        temp = Cluster(index)
+        #print(node)
+        temp.build_cluster([node])
+        clusters.append(temp)
+        index+=1
     size = len(nodes)
 
-    cluster_num = 0
+    cluster_num = 10
     while(len(clusters) > 1):
         cont = 1
-        for cluster in clusters:
-            if not cluster.visited:
-                cluster.visited = True
-                nearest_cluster = 0
-                min_dist = 0
-                for target in clusters:
-                    if (target == cluster):
-                        continue 
-                    temp = dist(cluster, target)
-                    if (temp < min_dist):
-                        min_dist = temp
-                        nearest_cluster = target
-                
-                new_cluster = Cluster(cluster_num)
-                if(new_cluster.define(node)):
-                    clusters.append(new_cluster)
-                    cluster_num += 1
-                #else:
-                    #print(new_cluster.items2)
-        #print("asdas: ")
-
-    for temp in clusters:
+        cluster = clusters.pop(0)
+        #for cluster in clusters:
+            #if not cluster.visited:
+        #cluster.visited = True
+        nearest_cluster = clusters[0]
+        min_dist = dist(cluster.point, clusters[0].point)
+        for target in clusters:
+            if (target == cluster):
+                continue 
+            temp = dist(cluster.point, target.point)  # preguntar al profe 
+            if (temp < min_dist):
+                min_dist = temp
+                nearest_cluster = target
         
-        x=[]
-        y=[]
-        print(temp.itemCount)
-        for item in temp.items2:
-            x.append(item.point[0])
-            y.append(item.point[1])
-        plt.plot(x,y,'*')
-    plt.show()
-    print("cluster_num: " + str(cluster_num))
+        new_cluster = Cluster(cluster_num)  #,np.mean( np.array([ cluster.point, nearest_cluster.point ]), axis=0 )
+        new_cluster.build_cluster([cluster, nearest_cluster])
+        clusters.remove(nearest_cluster)
+        clusters.append(new_cluster)
+        cluster_num += 1
+    clusters[0].print("init")
 
-    
+matrix= [
+    [2],
+    [1],
+    [4],
+    [3],
+    [5],
+    [9],
+    [8],
+    [7],
+    [10],
+    [6]
+]
+
+algorithm(matrix)
