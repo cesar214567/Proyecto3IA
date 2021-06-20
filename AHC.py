@@ -24,17 +24,25 @@ class Cluster:
         self.items = []
         self.itemCount = 0
         self.point = []
+        self.data = {}
 
-    def build_cluster(self,clusters):
+    def build_cluster(self,clusters,name=None):
         temp = np.zeros(len(clusters[0].point))       
         for cluster in clusters:
             self.items.append(cluster)
-            if(type(cluster)=='Cluster'):
+            if(len(clusters)>1):
                 self.itemCount+=cluster.itemCount
+                temp += cluster.point*cluster.itemCount
+                for key in cluster.data.keys():
+                    if key in self.data.keys():
+                        self.data[key]+=cluster.data[key]
+                    else:
+                        self.data[key]=cluster.data[key]
             else:
                 self.itemCount = 1
-            temp += cluster.point
-        self.point = temp
+                temp += cluster.point
+                self.data[name]=1
+        self.point = temp/self.itemCount
     
     def print(self, numero):
         temp = numero + " - " + str(self.number)
@@ -49,21 +57,29 @@ class Cluster:
             self.items[1].print()
 
 def algorithm(matrix):
+
+    file = open("clase.csv")
+    lista = []
+    for line in file: 
+        l = line.split(",")
+        lista.append(l[1])
+    lista = lista[1:]
     nodes = []
     clusters = []
     index = 0
+
     for row in matrix:
         node = Node(row)
         nodes.append(node)
         temp = Cluster(index)
         #print(node)
-        temp.build_cluster([node])
+        temp.build_cluster([node],lista[index])
         clusters.append(temp)
         index+=1
     size = len(nodes)
-
-    cluster_num = 10
-    while(len(clusters) > 1):
+    K= 12
+    cluster_num = len(matrix)
+    while(len(clusters) > K):
         cont = 1
         cluster = clusters.pop(0)
         #for cluster in clusters:
@@ -72,19 +88,21 @@ def algorithm(matrix):
         nearest_cluster = clusters[0]
         min_dist = dist(cluster.point, clusters[0].point)
         for target in clusters:
-            if (target == cluster):
-                continue 
+            
             temp = dist(cluster.point, target.point)  # preguntar al profe 
             if (temp < min_dist):
                 min_dist = temp
                 nearest_cluster = target
-        
-        new_cluster = Cluster(cluster_num)  #,np.mean( np.array([ cluster.point, nearest_cluster.point ]), axis=0 )
+        new_cluster = Cluster(cluster_num)  
         new_cluster.build_cluster([cluster, nearest_cluster])
+        
         clusters.remove(nearest_cluster)
         clusters.append(new_cluster)
         cluster_num += 1
+    print('----------------------------')
     clusters[0].print("init")
+    for cluster in clusters:
+        print(cluster.data)
 
 matrix= [
     [2],

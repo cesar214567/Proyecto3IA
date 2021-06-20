@@ -5,7 +5,7 @@ from PIL import Image
 from scipy import misc
 import numpy as np
 import pandas
-
+from AHC import algorithm
 
 from numpy import mean
 from numpy import std
@@ -42,4 +42,5 @@ def reduce_db(X,num):
 lst = read_db()
 print(len(lst))
 lst =reduce_db(lst,30)
-KMeans(lst)
+#KMeans(lst)
+algorithm(lst)
