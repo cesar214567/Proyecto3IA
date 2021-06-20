@@ -29,6 +29,7 @@ class Cluster:
                     average += node.point[dimension]
             average = average/len(self.items)
             self.point[dimension] = average
+        self.items = []
     
     def setData(self):
         self.data={}
@@ -44,15 +45,20 @@ def dist(a, b):
     return distance.euclidean(a,b)
 
 def get_nearests(nodes,clusters):
+    for cluster in clusters:
+        cluster.items=[]
     for node in nodes:
         minimum = dist(node.point, clusters[0].point)
         node.cluster = 0
         for i in range(len(clusters)):
+            
             distance = dist(node.point, clusters[i].point)
             if (distance < minimum):
                 minimum = distance
                 node.cluster = i
-            clusters[node.cluster].items.append(node)
+        clusters[node.cluster].items.append(node)
+    for cluster in clusters:
+        print (len(cluster.items))
 
     
 def while_loop(nodes, clusters,iters=None):
