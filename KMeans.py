@@ -57,8 +57,7 @@ def get_nearests(nodes,clusters):
                 minimum = distance
                 node.cluster = i
         clusters[node.cluster].items.append(node)
-    for cluster in clusters:
-        print (len(cluster.items))
+    
 
     
 def while_loop(nodes, clusters,iters=None):
@@ -101,7 +100,7 @@ def KMeans(points):
         clusters.append(Cluster(nodeTemp))
     for i in clusters:
         print(i.point)
-    while_loop(nodes,clusters,15)
+    while_loop(nodes,clusters,100)
     get_nearests(nodes,clusters)
     for cluster in clusters:
         cluster.setData()
