@@ -77,6 +77,8 @@ def while_loop(nodes, clusters,iters=None):
 
 def KMeans(points):
     #Get clase names
+    random.seed(9)
+
     file = open("clase.csv")
     lista = []
     for line in file: 
