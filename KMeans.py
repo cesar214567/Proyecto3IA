@@ -93,14 +93,18 @@ def KMeans(points):
         i+=1
 
     clusters = []
+    clusters_chosen = []
     size = len(nodes)
-    K = 7
+    K = 10
     for i in range(K):
-        nodeTemp = nodes[random.randint(0,size)].point        
+        random_number =random.randint(0,size-1)
+        while(random_number in clusters_chosen):
+            random_number =random.randint(0,size)
+        nodeTemp = nodes[random_number].point        
         clusters.append(Cluster(nodeTemp))
     for i in clusters:
         print(i.point)
-    while_loop(nodes,clusters,100)
+    while_loop(nodes,clusters,200)
     get_nearests(nodes,clusters)
     for cluster in clusters:
         cluster.setData()
