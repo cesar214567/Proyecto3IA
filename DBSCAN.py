@@ -8,10 +8,14 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import csv 
 import sys
+from cels import read_db
+from cels import reduce_db
+
 
 nodes=[]
 points = []
 def dist(a, b):
+    print(math.dist(a,b))
     return math.dist(a,b)
     
 class Node:
@@ -31,12 +35,13 @@ class Node:
         return temp
 
 class Cluster:
-    def __init__(self,x,r=4):
+    def __init__(self,x,name,r=4,):
         self.number = x
         self.items = []
         self.items2 = []
         self.r = r
         self.itemCount = 0
+        self.name = name
 
     def build_cluster(self,node, tree):
         self.items.append(node)
@@ -55,10 +60,8 @@ class Cluster:
                     self.itemCount+=1
                     neigh.cluster=self.number
         
-        
-
     def isValid(self):
-        return self.itemCount >= 50
+        return self.itemCount >= 0
 
     def define(self, node, tree):
         self.build_cluster(node, tree)
@@ -70,8 +73,21 @@ class Cluster:
             return False
         return True
 
-def DBSCAN(points, name):
+def DBSCAN(points):
+    #dic = {}
+    #for i in range(0,len(points)):
+    #    dic[points[i]] = i
 
+    file = open("clase.csv")
+    lista = []
+    for line in file: 
+        l = line.split(",")
+        lista.append(l[1])
+    lista = lista[1:]
+    new_lista = list(dict.fromkeys(lista))
+
+
+    print(len(points))
     for point in points: 
         nodes.append(Node(point))
     print("Info", len(points), len(points[0]), points[0])
@@ -81,29 +97,43 @@ def DBSCAN(points, name):
     clusters = []
     size = len(nodes)
 
-    r = 1
+    r = 60
 
     cluster_num = 0
+    i = 0
     for node in nodes:
         if node.cluster == -1:
-            new_cluster = Cluster(cluster_num)
+            new_cluster = Cluster(cluster_num,lista[i],r)
             if(new_cluster.define(node, tree)):
                 clusters.append(new_cluster)
                 cluster_num += 1
+        i += 1
             #else:
                 #print(new_cluster.items2)
     #print("asdas: ")
-
+    
     for temp in clusters:     
         x=[]
         y=[]
-        # print(temp.itemCount)
         for item in temp.items2:
             x.append(item.point[0])
             y.append(item.point[1])
-        plt.plot(x,y,'*')
-        
+
+        print(temp.name[:-1])
+        plt.plot(x,y,'*',label=temp.name[:-1])
+        print("Cluster: %s, number %d" % (temp.name[:-1], len(temp.items2)))
+    plt.legend()    
     plt.show()
+    
     #plt.savefig("DBS_IMG_"+str(name))
     plt.clf()
     print("cluster_num: " + str(cluster_num))
+
+    for c in new_lista:
+        print("%s tiene %d"% (c,lista.count(c)))
+
+
+lst = read_db()
+new= reduce_db(lst,20)
+DBSCAN(new)
+

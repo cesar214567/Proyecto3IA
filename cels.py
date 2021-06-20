@@ -1,10 +1,19 @@
-from DBSCAN import DBSCAN
+#from DBSCAN import DBSCAN
 #from KMeans import KMeans
 #from MeanShift import MeanShift
 from PIL import Image
 from scipy import misc
 import numpy as np
 import pandas
+
+#from sklearn.decomposition import PCA
+#from sklearn.decomposition import IncrementalPCA
+#from sklearn.decomposition import KernelPCA
+#from sklearn.decomposition import SparsePCA
+from numpy import mean
+from numpy import std
+from sklearn.decomposition import TruncatedSVD
+
 
 def read_db():
     i = 1
@@ -14,10 +23,25 @@ def read_db():
     file2 = pandas.read_csv("clase.csv")
     for index, row in file2.iterrows():
         types[row['x']]=row['type']
-    print(types)
-    index =0 
+    #print(types)
+    index = 0 
+    x = []
     for (colname,colval) in file.iteritems(): #colval.values = column values
-        #resize(colval.values)    
-        print(list(colval.values))
+        x.append(list(colval.values))
+        #print(len(list(colval.values)))
+    return x
 
-read_db()
+
+
+def reduce_db(X,num):
+    trun_svd =  TruncatedSVD(n_components = num)
+    A_transformed = trun_svd.fit_transform(X)
+   # print(A_transformed)
+    return A_transformed
+    
+
+
+    
+lst = read_db()
+#print(len(lst))
+reduce_db(lst,30)
