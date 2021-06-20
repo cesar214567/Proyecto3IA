@@ -19,6 +19,7 @@ class Cluster:
     def __init__(self,tupla):
         self.point = list(tupla)
         self.items = []
+        self.data = {}
     def moveCenter(self):
         tempnode = self.items[0]
         for dimension in range(tempnode.dimensions):
@@ -28,6 +29,16 @@ class Cluster:
                     average += node.point[dimension]
             average = average/len(self.items)
             self.point[dimension] = average
+    
+    def setData(self):
+        self.data={}
+        print(len(self.items))
+        for item in self.items:
+            if item.name in self.data.keys():
+                self.data[item.name]+=1
+            else:
+                self.data[item.name]=1
+
 
 def dist(a, b):
     return distance.euclidean(a,b)
@@ -43,6 +54,7 @@ def get_nearests(nodes,clusters):
                 node.cluster = i
             clusters[node.cluster].items.append(node)
 
+    
 def while_loop(nodes, clusters,iters=None):
     if (iters==None):
         return clusters
@@ -52,18 +64,8 @@ def while_loop(nodes, clusters,iters=None):
             for cluster in clusters:
                 cluster.moveCenter()
                 cluster.items.clear()
+                
 
-
-def RepeatedColor(nodeTemp,clusters):
-    print("#######")
-    print(nodeTemp[2:])
-    for cluster in clusters:
-        print(cluster.point[2:])
-        print(dist(cluster.point[2:],nodeTemp[2:]))
-        print("----")
-        if(dist(cluster.point[2:],nodeTemp[2:])<10):
-            return True
-    return False
 
 
 
@@ -95,9 +97,12 @@ def KMeans(points):
         print(i.point)
     while_loop(nodes,clusters,15)
     get_nearests(nodes,clusters)
+    for cluster in clusters:
+        cluster.setData()
     returning_points=[]
     for cluster in clusters:
         list_clust = []
+        print(cluster.data)
         for node in cluster.items:
             returning_points.append(node.point)
             
@@ -112,4 +117,4 @@ def KMeans(points):
     
     
   
-read_db()
+#read_db()

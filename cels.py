@@ -1,5 +1,5 @@
 #from DBSCAN import DBSCAN
-#from KMeans import KMeans
+from KMeans import KMeans
 #from MeanShift import MeanShift
 from PIL import Image
 from scipy import misc
@@ -39,7 +39,7 @@ def reduce_db(X,num):
 
 
     
-#lst = read_db()
-#print(len(lst))
-#reduce_db(lst,30)
-#KMeans()
+lst = read_db()
+print(len(lst))
+lst =reduce_db(lst,30)
+KMeans(lst)

@@ -30,7 +30,6 @@ class Node:
         data = tree.query_ball_point(self.point,r)
         # print(data)
         for item in data:
-            # print(nodes[item].point)
             temp.append(nodes[item])
         return temp
 
