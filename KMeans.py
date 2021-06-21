@@ -21,6 +21,8 @@ class Cluster:
         self.items = []
         self.data = {}
     def moveCenter(self):
+        if (len(self.items)==0):
+            return 
         tempnode = self.items[0]
         for dimension in range(tempnode.dimensions):
             average = 0
@@ -33,7 +35,6 @@ class Cluster:
     
     def setData(self):
         self.data={}
-        print(len(self.items))
         for item in self.items:
             if item.name in self.data.keys():
                 self.data[item.name]+=1
@@ -60,16 +61,13 @@ def get_nearests(nodes,clusters):
     
 
     
-def while_loop(nodes, clusters,iters=None):
-    if (iters==None):
-        return clusters
-    else:
-        for i in range(iters):
-            get_nearests(nodes,clusters)
-            for cluster in clusters:
-                cluster.moveCenter()
-                cluster.items.clear()
-                
+def while_loop(nodes, clusters,iters):
+    for i in range(iters):
+        get_nearests(nodes,clusters)
+        for cluster in clusters:
+            cluster.moveCenter()
+            cluster.items.clear()
+               
 
 
 
@@ -97,15 +95,13 @@ def KMeans(points):
     clusters = []
     clusters_chosen = []
     size = len(nodes)
-    K = 10
+    K = 12
     for i in range(K):
         random_number =random.randint(0,size-1)
         while(random_number in clusters_chosen):
             random_number =random.randint(0,size)
         nodeTemp = nodes[random_number].point        
         clusters.append(Cluster(nodeTemp))
-    for i in clusters:
-        print(i.point)
     while_loop(nodes,clusters,200)
     get_nearests(nodes,clusters)
     for cluster in clusters:
@@ -114,8 +110,7 @@ def KMeans(points):
     for cluster in clusters:
         list_clust = []
         print(cluster.data)
-        for node in cluster.items:
-            returning_points.append(node.point)
+        
             
   
     #im.show()

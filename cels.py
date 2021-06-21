@@ -40,7 +40,6 @@ def reduce_db(X,num):
 
     
 lst = read_db()
-print(len(lst))
 lst =reduce_db(lst,30)
 #KMeans(lst)
 algorithm(lst)

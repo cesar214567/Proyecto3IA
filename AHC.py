@@ -1,5 +1,4 @@
 import numpy as np
-from random import random, randrange
 from scipy.spatial import distance
 import matplotlib.pyplot as plt
 
@@ -80,11 +79,7 @@ def algorithm(matrix):
     K= 12
     cluster_num = len(matrix)
     while(len(clusters) > K):
-        cont = 1
         cluster = clusters.pop(0)
-        #for cluster in clusters:
-            #if not cluster.visited:
-        #cluster.visited = True
         nearest_cluster = clusters[0]
         min_dist = dist(cluster.point, clusters[0].point)
         for target in clusters:
@@ -99,22 +94,10 @@ def algorithm(matrix):
         clusters.remove(nearest_cluster)
         clusters.append(new_cluster)
         cluster_num += 1
-    print('----------------------------')
-    clusters[0].print("init")
+    #print('----------------------------')
+    #clusters[0].print("init")
     for cluster in clusters:
         print(cluster.data)
 
-matrix= [
-    [2],
-    [1],
-    [4],
-    [3],
-    [5],
-    [9],
-    [8],
-    [7],
-    [10],
-    [6]
-]
 
-algorithm(matrix)
+#algorithm(matrix)
